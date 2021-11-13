@@ -1,0 +1,2 @@
+# Cronjob to automate backup process
+30 8 * * * /home/ubuntu/scripts/db_backup.sh

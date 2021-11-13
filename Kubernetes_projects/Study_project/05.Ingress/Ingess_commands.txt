@@ -1,0 +1,34 @@
+### Install Ingress Controller: Contour
+kubectl apply -f https://projectcontour.io/quickstart/contour.yaml
+kubectl get services -n projectcontour envoy -o wide
+
+Get LoadBalancer IP or DNS Name and assign Your Domain to this DNS name
+
+# Create Deployments
+kubectl create deployment main   --image=sv301185/k8sphp:latest
+kubectl create deployment web1   --image=nginx:latest
+kubectl create deployment webx   --image=httpd:latest
+kubectl create deployment tomcat --image=tomcat:8.5.38
+
+# Scale Deployments
+kubectl scale deployment main  --replicas 2
+kubectl scale deployment web1  --replicas 2
+kubectl scale deployment webx  --replicas 2
+kubectl scale deployment tomcat  --replicas 2
+
+# Create Services, default type is: --type=ClusterIP
+kubectl expose deployment main   --port 80
+kubectl expose deployment web1   --port 80
+kubectl expose deployment webx   --port 80
+kubectl expose deployment tomcat --port 8080
+
+kubectl get services -o wide
+
+kubectl apply -f ingress-hosts.yaml
+kubectl apply -f ingress-paths.yaml
+kubectl get ingress
+kubectl describe ingress
+
+# Completely delete Ingress Controller: Contour
+kubectl delete ns projectcontour
+© 2021 GitHub, Inc.

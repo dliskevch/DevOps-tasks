@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: phabricator
+spec:
+  type: NodePort
+  selector:
+    app: phabricator
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30007
+      
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phabricator
+spec:
+  selector:
+    matchLabels:
+      app: phabricator
+
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: phabricator
+    spec:
+      containers:
+      - name: phabricator
+        image: 5552233322555/dima:phabric
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c", "cd /var/www/html/phabricator/phabricator && ./bin/config set mysql.pass $MYSQL_ROOT_PASSWORD"]
+        ports:
+        - containerPort: 80
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: password

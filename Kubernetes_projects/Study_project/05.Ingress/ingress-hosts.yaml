@@ -1,0 +1,55 @@
+#---------------------------------------------------------------------
+# Manifest File to create Ingess Rules for Hosts
+#
+# Created by Dmytro Liskevych 2021
+#---------------------------------------------------------------------
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-hosts
+
+spec:
+  rules:
+  - host: "www.dl.com"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/bar"
+        backend:
+          service:
+            name: main
+            port:
+              number: 80
+
+  - host: "www.dl.net"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/bor"
+        backend:
+          service:
+            name: web1
+            port:
+              number: 80
+
+  - host: "www.dls.ua"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/bur"
+        backend:
+          service:
+            name: webx
+            port:
+              number: 80
+
+  - host: "www.who.com"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/ber"
+        backend:
+          service:
+            name: tomcat
+            port:
+              number: 8080

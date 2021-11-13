@@ -1,0 +1,38 @@
+#----------------------------------------------------
+#
+# Create pod with using different types of ENVIRONMENT
+# Also we use livenessProbe in this homework
+#
+# Made by Dmytro Liskevych 2021
+#
+#----------------------------------------------------
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example-pod
+  namespace: homework
+  labels:
+    app.kubernetes.io/name: example
+spec:
+  containers:
+    - name: nginx
+      image: nginx:latest
+      ports:
+      - containerPort: 80
+        name: http
+      env:
+      - name: ENVIRONMENT
+        value: development
+      - name: POD_IP
+        valueFrom:
+          fieldRef:
+            fieldPath: status.podIP
+      livenessProbe:
+        httpGet:
+          path: /
+          port: http
+        initialDelaySeconds: 5
+        successThreshold: 1
+        failureThreshold: 1
+        periodSeconds: 1

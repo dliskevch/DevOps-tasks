@@ -1,0 +1,6 @@
+{
+  "mysql.pass": "12345",
+  "mysql.user": "root",
+  "mysql.port": "3306",
+  "mysql.host": "localhost"
+}

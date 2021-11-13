@@ -1,0 +1,20 @@
+---
+- hosts: master
+  become: true
+  vars:
+    vault_url: http://10.26.0.205:8200
+    vault_token: s.neZQ2XbicgfAsgR4u8TGtkZF
+    serv: "{{ lookup('hashi_vault', 'secret=secret/ansible/cred token={{vault_token}} url={{vault_url}}') }}"
+
+  tasks:
+    - name: Return all secrets from a path
+      ansible.builtin.debug:
+        msg: '{{serv}}'
+#        msg: "{{ lookup('hashi_vault', 'secret=secret/ansible/cred token={{vault_token}} url={{vault_url}}') }}"
+    - name: Insert credentials
+      ansible.builtin.replace:
+        path: "/home/silver/list"
+        regexp: 'first'
+        replace: '{{serv.info}}'
+        
+  

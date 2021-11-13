@@ -1,0 +1,25 @@
+#-------------------------------------------------------------
+# Manifest File to create Simple Deployment with Labels
+#
+# Created by Dmytro Liskevych 2021
+#-------------------------------------------------------------
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: my-web-deployment
+  labels:
+    app : my-k8s-application
+spec:
+  selector:
+    matchLabels:
+      project: new
+  template:
+    metadata:
+      labels:
+        project: new
+    spec:
+      containers:
+        - name : new-web
+          image: httpd:latest
+          ports:
+            - containerPort: 80

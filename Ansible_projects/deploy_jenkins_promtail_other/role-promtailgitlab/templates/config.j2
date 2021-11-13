@@ -1,0 +1,40 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
+{{ ansible_managed | comment }}
+# https://github.com/grafana/loki/blob/master/docs/clients/promtail/configuration.md
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://10.26.0.189:3100/loki/api/v1/push
+    external_labels:
+      host: {{hname}}
+
+scrape_configs:
+  - job_name: system
+    static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: varlogs
+        __path__: /var/log/*log
+
+  - job_name: journal
+    journal:
+      max_age: 12h
+      labels:
+        job: systemd-journal
+    relabel_configs:
+      - source_labels: ['__journal__systemd_unit']
+        target_label: 'unitt'
+
+  - job_name: "{{hname}}_log"
+    static_configs:
+    - targets:
+        - {{hname}}
+      labels:
+        job: "{{hname}}_log"
+        __path__: /var/log/gitlab/gitlab-rails/*.log

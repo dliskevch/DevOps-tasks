@@ -1,0 +1,5 @@
+---
+- hosts: nginx
+  roles:
+    - role: role-promtailnginx
+      

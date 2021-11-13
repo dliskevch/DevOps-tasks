@@ -1,0 +1,10 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+
+  - name: Add user to remote hosts
+    user: name=dmytro groups=wheel shell=/bin/bash password=12345
+
+  - name: Add SSH keys to remote hosts
+    authorized_key: user=dmytro key="{{ lookup('file', "/home/dmytro/.ssh/id_rsa.pub") }}"

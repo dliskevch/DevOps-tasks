@@ -1,0 +1,56 @@
+pipeline {
+   agent { label 'phabricator' }
+   
+   environment {
+        PATH="$PATH:/var/www/html/phabricator/arcanist/bin/"
+        }
+
+
+   stages {
+       stage('git clone') {
+         steps {
+            echo "cloning repositories"
+            git branch: 'master', url: 'https://github.com/phacility/phabricator.git'
+            git branch: 'master', url: 'https://github.com/phacility/phabricator.git'
+            echo "cloned"
+         }
+      }
+      
+       stage('Tests') {
+            steps {
+                echo 'Tests started!'
+                dir('phabricator') {
+                    script {
+                        try {
+                            sh 'arc unit --everything'
+                            } catch(err) {
+                                echo "I have caught an error!"
+                                echo err.getMessage()
+                                }
+                    }
+                echo 'Tests SUCCESS'
+                }
+            }
+        }
+      stage('Deploying') {
+            steps {
+                sshPublisher(
+                    continueOnError: false, failOnError: true,
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: "Docker_prod",
+                            verbose: true,
+                            transfers: [
+                                sshTransfer(execCommand: ''' cd /opt/compose/
+                                    docker-compose stop
+                                    docker rm -f $(docker ps -aq)
+                                    docker rmi -f $(docker images -q)
+				                    docker-compose up -d''')]
+                                )
+                        ]
+                    )
+                }
+            }
+      
+    }
+}

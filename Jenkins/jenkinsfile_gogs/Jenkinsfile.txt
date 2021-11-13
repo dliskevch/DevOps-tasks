@@ -1,0 +1,42 @@
+pipeline {
+   agent { label 'go' }
+
+   stages {
+      stage('git clone') {
+         steps {
+            echo "git"
+            git branch: 'main', credentialsId: 'github-ssh-key', url: 'git@10.26.0.168:root/gogs.git'
+         }
+      }
+      stage('test') {
+         steps {
+            echo 'Running test'
+            sh 'go test -v "./..."'
+#			sh 'go vet .'
+         }
+      }
+      stage('build') {
+         steps {
+            echo 'Compiling and building'
+            sh 'go build'
+         }
+      }
+      
+	  stage('Deploy') {
+         steps {
+            sshPublisher(
+                continueOnError: false, failOnError: true,
+                publishers: [
+                    sshPublisherDesc(
+                        configName: "app",
+                        verbose: true,
+                        transfers: [
+                            sshTransfer(execCommand: ''' cd /home/jenkins/app
+                                chmod +x gogs''', sourceFiles: "gogs")]
+                    )
+                ]
+            )
+        }
+   }
+   }
+}

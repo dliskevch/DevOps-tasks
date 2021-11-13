@@ -1,0 +1,28 @@
+---
+   
+- name: Install_Promtail_on_haproxy
+  hosts: haproxy
+  roles:
+    - role: role-promtailhaproxy
+
+
+- name: Install_Promtail_on_gitlab
+  hosts: gitlab
+  roles:  
+    - role: role-promtailgitlab
+
+- name: Install_Promtail_on_app
+  hosts: app   
+  roles:  
+    - role: role-promtailapp
+    
+- name: Install_Promtail_on_db
+  hosts: db
+  roles:  
+    - role: role-promtaildb
+    
+- name: Install_Promtail_on_nginx
+  hosts: nginx
+  roles:  
+    - role: role-promtailnginx
+    

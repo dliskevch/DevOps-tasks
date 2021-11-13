@@ -1,0 +1,23 @@
+#----------------------------------------------
+#
+# Task for create folders and files
+#
+# Created by Dmytro Liskevych
+#
+#----------------------------------------------
+
+---
+  - name: My Super Playbook
+    hosts: all
+    become: yes
+
+    vars:
+      mytext: "Hello from Dmytro Liskevych"
+
+    tasks:
+      - name: Ping test
+        ping:
+
+      - include: create_folders.yml
+
+      - include: create_files.yml mytext="Hello from my Kyiv"

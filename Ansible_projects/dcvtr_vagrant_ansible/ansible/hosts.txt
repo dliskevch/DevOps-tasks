@@ -1,0 +1,4 @@
+[docker_servers]
+dns     ansible_host=192.168.1.110
+docker1 ansible_host=192.168.1.112
+docker2 ansible_host=192.168.1.113
